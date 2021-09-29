@@ -10,84 +10,165 @@ bxhealthapp:
     STARTUP_COMMAND: "tail"
     STARTUP_BACKGROUND_OPTS: "-f /dev/null"
 
-ping-devops: {}
+ping-devops:
+  global: 
+    ingress:
+      enabled: false
+      addReleaseNameToHost: append
+      defaultDomain: ping-devops.com
+      defaultTlsSecret:
+      annotations:
+        nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+        kubernetes.io/ingress.class: "nginx-public"
+    envs:
+      SERVER_PROFILE_URL: https://github.com/Technical-Enablement-PingIdentity/BXHealth-ServerProfiles
 
-## COPIED GLOBAL FROM ping-devops 0.7.6
+  pingaccess-admin:
+    enabled: true
+    name: pingaccess-admin
+    workload:
+      type: Deployment
+    container:
+      resources:
+        requests:
+          cpu: 0
+          memory: 1Gi
+        limits:
+          cpu: 1.5
+          memory: 1Gi
+    envs:
+      OPERATIONAL_MODE: STANDALONE
+      SERVER_PROFILE_PATH: profiles/pingaccess
+
+    services:
+      admin:
+        servicePort: 9000
+        containerPort: 9000
+        ingressPort: 443
+        dataService: true
+      engine:
+        servicePort: 3000
+        containerPort: 3000
+        ingressPort: 443
+        dataService: true
+      http:
+        servicePort: 8080
+        containerPort: 8080
+        ingressPort: 80
+        dataService: true
+
+    ingress:
+      enabled: true
+      annotations:
+        kubernetes.io/ingress.class: nginx-public-passthrough
+        nginx.ingress.kubernetes.io/service-upstream: "true"
+        nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+      hosts:
+        - host: pingaccess-admin._defaultDomain_
+          paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              serviceName: admin
+        ## CHANGEME
+        - host: pingaccess._defaultDomain_
+          paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              serviceName: https
+          - path: /.well-known/acme-challenge
+            pathType: Prefix
+            backend:
+              serviceName: http
+
+  pingfederate-admin:
+    enabled: true
+    container:
+      waitFor:
+        pingdirectory:
+          service: ldaps
+          timeoutSeconds: 300
+      resources:
+        requests:
+          cpu: 0
+          memory: 1Gi
+        limits:
+          cpu: 2
+          memory: 4Gi
+    envs:
+      OPERATIONAL_MODE: STANDALONE
+      SERVER_PROFILE_PATH: profiles/pingfederate
+
+    services:
+      admin:
+        servicePort: 9999
+        containerPort: 9999
+        ingressPort: 443
+        dataService: true
+      engine:
+        servicePort: 9031
+        containerPort: 9031
+        ingressPort: 443
+        dataService: true
+
+  pingdirectory:
+    enabled: true
+    container:
+      replicaCount: 1
+      resources:
+        requests:
+          cpu: 50m
+          memory: 3Gi
+        limits:
+          cpu: 2
+          memory: 3Gi
+    envs:
+      MAX_HEAP_SIZE: 2458m
+      SERVER_PROFILE_PATH: profiles/pingdirectory
+      ROOT_USER_PASSWORD_FILE: /opt/staging/pwd
+      ADMIN_USER_PASSWORD_FILE: /opt/staging/pwd
+      ENCRYPTION_PASSWORD_FILE: /opt/staging/pwd
+    services:
+      ldap:
+        servicePort: 389
+        containerPort: 1389
+        dataService: true
+      ldaps:
+        servicePort: 636
+        containerPort: 1636
+        dataService: true
+        clusterService: true
+      https:
+        servicePort: 443
+        containerPort: 1443
+        ingressPort: 443
+        dataService: true
+  
+  pingdataconsole:
+    enabled: true
+
+
+## copied from pingidentity/ping-devops 0.7.6
 global:
-  ############################################################
-  # annotations - Annotations listed, will be added to the
-  #               kubernetes resource
-  ############################################################
   annotations: {}
 
-  ############################################################
-  # envs - Environment variables listed will be added to the
-  #        global-env-vars configmap.
-  #
-  # NOTE: Environment variables listed at the global: level
-  #       will actually end up being listed twice in the
-  #       configmaps (i.e. global-env-vars and product-env-vars)
-  ############################################################
   envs: {}
 
-  ############################################################
-  #  addReleaseNameToResource: Provides global ability to add
-  #                            names to kubernetes resources
-  #                      none: No use of Release.Name
-  #                    append: Appends the Release.Name
-  #                   prepend: Prepends the Release.Name ** DEFAULT **
-  ############################################################
   addReleaseNameToResource: prepend
 
-  ############################################################
-  # Ingress
-  #
-  #          ingress.enabled: {true | false}
-  # ingress.addReleaseToHost: {prepend | append | subdomain | none}
-  #    ingress.defaultDomain: Replaces with "_defaultDomain_" in host fields
-  # ingress.defaultTlsSecret: Replaces with "_defaultTlsSecret_" in tls.secretName
-  ############################################################
   ingress:
     enabled: false
     addReleaseNameToHost: subdomain
     defaultDomain: example.com
     defaultTlsSecret:
     annotations: {}
-      # nginx example
-      # nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
-      # kubernetes.io/ingress.class: "nginx-public"
 
-  ############################################################
-  # Internal Certificates
-  #
-  # If set to true, then an internal certificate secret will
-  # be created along with mount of the certificate in
-  # /run/secrets/internal-cert (creates a tls.crt and tls.key)
-  #
-  # By default the Issuer of the cert will be the service name
-  # created by the Helm Chart.  Additionally, the ingress hosts,
-  # if enabled, will be added to the list of X509v3 Subject Alternative Name
-  #
-  # Use the additionalHosts and additionalIPs if additional custom
-  # names and ips are needed.
-  #
-  #      privateCert.generate: {true | false}
-  #      privateCert.additionalHosts: {optional array of hosts}
-  #      privateCert.additionalIPs: {optional array of IP Addresses}
-  ############################################################
   privateCert:
     generate: false
     additionalHosts: []
     additionalIPs: []
 
-  ############################################################
-  # Fields used to annotate secret hashicorp vault information
-  #
-  # These annotations names will be automatically be
-  # appended to the 'vault.hashicorp.com/'
-  #
-  # https://www.vaultproject.io/docs/platform/k8s/injector/annotations
-  ############################################################
   vault:
     enabled: false
     hashicorp:
@@ -100,40 +181,13 @@ global:
         role: k8s-default
         secret-volume-path: /run/secrets
         serviceAccountName: vault-auth
-  #   secrets:
-  #     {secret-name}:
-  #       {secret-key | to-json}:
-  #         path: /opt/in/some/location/secrets
-  #         file: devops-secret.env
 
-  ############################################################
-  # Image
-  #
-  # By default the images uses will be indicated by these
-  # variables.  An example might look like:
-  #
-  #   pingidentity/pingdataconsole:2108 (August, 2021)
-  #
-  # NOTE: image.name MUST be set in child chart
-  #   Example: image.name: pingfederate
-  ############################################################
   image:
     repository: pingidentity
     name:
     tag: "2108"
     pullPolicy: IfNotPresent
 
-  ############################################################
-  # External Images (typically for initContainers)
-  #
-  # Provides ability to use external images for various purposes
-  # such as using curl, waitfor, ...  Example below is for use
-  # of the pingtoolkit image used as a waitFor and generation of
-  # private cert initContainers.
-  #
-  # Values found within each external image are copied directly
-  # to the container/initContainer.
-  ############################################################
   externalImage:
     pingtoolkit:
       image: pingidentity/pingtoolkit:2108
@@ -155,117 +209,26 @@ global:
         runAsUser: 9031
         runAsGroup: 9999
 
-  ############################################################
-  # Services
-  #
-  # Creates services mapping a port to a targetPort on the
-  # corresponding container.
-  #
-  # dataService    - If set to true, a ClusterIP service is
-  #                  created reachable within the cluster.
-  #                  A single IP is provided and the service
-  #                  will round-robin across the backend containers.
-  #
-  # clusterService - If set to true, a "headless" service is
-  #                  explicitly specifying "None" for the
-  #                  clusterIP.  DNS requests to this service
-  #                  will provide one of the IPs of the backend
-  #                  containers.
-  #
-  # containerPort  - Port that is used on the kubernetes container.
-  #
-  # servicePort    - Port that is available from the kubernetes service
-  #                  Note: if clusterService=true this port on the
-  #                        cluster service is not really
-  #                        used as headless service always maps through
-  #                        to the container port
-  #
-  # ingressPort    - Port that is available from the kubernetes ingress
-  #
-  # clusterServiceName - If set, then this name will be used as the cluster
-  #                      service name (i.e clusterService == true).
-  #
-  # https://kubernetes.io/docs/concepts/services-networking/service/
-  ############################################################
   services: {}
-  #  admin:
-  #    containerPort: 9999
-  #    servicePort: 9999
-  #    ingressPort: 9999
-  #    dataService: true
-  #  clusterbind:
-  #    containerPort: 7600
-  #    servicePort: 7600
-  #    clusterService: true
-  #  clusterfail:
-  #    containerPort: 7700
-  #    servicePort: 7700
-  #    clusterService: true
-  #  clusterExternalDNSHostname:
-  #  clusterServiceName:
 
 
-  ############################################################
-  # Workload
-  #
-  # Two workloads supported:
-  #  - Deployment
-  #  - StatefulSet
-  ############################################################
   workload:
-    # Can be Deployment or StatefulSet
     type: Deployment
 
     annotations: {}
 
-    ############################################################
-    # schedulerName
-    #
-    # Provide the kubernetes default-scheduler, and allow for override
-    #
-    # https://kubernetes.io/docs/tasks/extend-kubernetes/configure-multiple-schedulers/
-    ############################################################
     schedulerName: default-scheduler
 
-    ############################################################
-    # Deployments
-    #
-    # Detailed information used to create a deployment specific
-    # workload.
-    #
-    # https://kubernetes.io/docs/concepts/workloads/controllers/deployment
-    ############################################################
     deployment:
       strategy:
-        # Can be RollingUpdate or Recreate
         type: RollingUpdate
         rollingUpdate:
           maxSurge: 1
           maxUnavailable: 0
 
-    ############################################################
-    # StatefulSets
-    #
-    # Detailed information used to create a statefulSet specific
-    # workload.
-    #
-    # https://kubernetes.io/docs/concepts/workloads/controllers/statefulset
-    ############################################################
     statefulSet:
-      # Used for canary testing if n>0
       partition: 0
 
-      ############################################################
-      # Persistent Volumes
-      #
-      # For every volume defined in the volumes list, 3 items will be
-      # created in the StatefulSet
-      #   1. container.volumeMounts - name and mountPath
-      #   2. template.spec.volume - name and persistentVolumeClaim.claimName
-      #   3. spec.volumeClaimTemplates - persistentVolumeClaim
-      #
-      # https://kubernetes.io/docs/concepts/storage/persistent-volumes/
-      ############################################################
       persistentvolume:
         enabled: true
         volumes:
@@ -279,36 +242,14 @@ global:
                 requests:
                   storage: 4Gi
 
-    ############################################################
-    # securityContext
-    #
-    # Note: The user (9031) and group (9999) represent the current user
-    #       and group used with PingIdentity images (except PingDelegator).
-    #       The fsGroup is set to same as group, however, it can be set to
-    #       any gid number.
-    #       The fsGroup is required for any workloads that volumeMount
-    #       a pvc (i.e. StatefulSets)
-    ############################################################
     securityContext:
       fsGroup: 9999
       runAsUser: 9031
       runAsGroup: 9999
-      # allowPrivilegeEscalation: false
-      # capabilities:
-      #   drop:
-      #   - ALL
 
-  ############################################################
-  # Container Information
-  #
-  # https://kubernetes.io/docs/concepts/workloads/controllers/
-  ############################################################
   container:
-    # replicaCount - Instructs Deployment/StatefulSet now many containers to run
     replicaCount: 1
 
-    # resources - Request  0 cpu/0 GB
-    #             Limit    4 cpu/0 GB
     resources:
       requests:
         cpu: 0
@@ -322,36 +263,9 @@ global:
     terminationGracePeriodSeconds: 30
 
     envFrom: []
-    # Additional envFrom configmap/secret references can be added
-    # envFrom:
-    # - configMapRef:
-    #     name: my-example-configmap
-    #     optional: true
-    # - secretRef:
-    #     name: my-example-secrets
-    #     optional: true
 
-    ############################################################
-    # container life handlers, allowing for lifecycle events such
-    # as postStart and preStop events
-    #
-    # https://kubernetes.io/docs/tasks/configure-pod-container/attach-handler-lifecycle-event
-    ############################################################
     lifecycle: {}
-    # Example
-    # lifecycle:
-    #   postStart:
-    #     exec:
-    #       command: ["/bin/sh", "-c", "echo Start Complete > /tmp/message"]
 
-    ############################################################
-    # Probes
-    #
-    # Probes have a number of fields that you can use to more precisely control the
-    # behavior of liveness and readiness checks.
-    #
-    # https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
-    ############################################################
     probes:
       livenessProbe:
         exec:
@@ -379,29 +293,10 @@ global:
         timeoutSeconds: 5
         failureThreshold: 90
 
-  ############################################################
-  # Licensing
-  #
-  # license.secret.devOps
-  #    Identify the k8s secret to keep the DevOps USER/KEY if used during deployment.
-  #
-  # NOTE: licenseSecretName can be set in deploying chart values to specify a secret
-  #       with actual product license.  This would override the DevOps secret.
-  #
-  # Using pingctl utility (brew install pingctl):
-  #    pingctl k8s generate devops-secret | kubectl apply -f -
-  ############################################################
   license:
     secret:
       devOps: devops-secret
 
-  #############################################################
-  # Includes for sidecars, initContainers and volumes
-  #
-  # At both global and product level, includes of sidecars,
-  # initContainers and volumes can be provided.  By default,
-  # none are included.
-  #############################################################
   includeSidecars: []
   includeInitContainers: []
   includeVolumes: []

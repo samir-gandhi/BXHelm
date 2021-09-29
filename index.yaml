@@ -3,7 +3,7 @@ entries:
   ping-bx:
   - apiVersion: v2
     appVersion: 0.7.6
-    created: "2021-09-29T11:18:01.373621-06:00"
+    created: "2021-09-29T11:22:19.894612-06:00"
     dependencies:
     - name: ping-devops
       repository: https://helm.pingidentity.com
@@ -13,6 +13,6 @@ entries:
     name: ping-bx
     type: application
     urls:
-    - https://samir-gandhi.github.io/BXHelm/ping-bx-0.0.1.tgz
+    - ping-bx-0.0.1.tgz
     version: 0.0.1
-generated: "2021-09-29T11:18:01.367339-06:00"
+generated: "2021-09-29T11:22:19.889085-06:00"

@@ -147,7 +147,19 @@ ping-devops:
   
   pingdataconsole:
     enabled: true
+    envs:
+      SERVER_PROFILE_URL: ""
+      SERVER_PROFILE_PATH: ""
+  
+  pingauthorize:
+    enabled: true
+    envs:
+      SERVER_PROFILE_PATH: profiles/pingauthorize
 
+  pingauthorizepap:
+    enabled: true
+    envs:
+      SERVER_PROFILE_PATH: profiles/pingauthorizepap
 
 ## copied from pingidentity/ping-devops 0.7.6
 global:

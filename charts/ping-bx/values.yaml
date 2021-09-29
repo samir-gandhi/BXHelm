@@ -99,18 +99,9 @@ ping-devops:
     envs:
       OPERATIONAL_MODE: STANDALONE
       SERVER_PROFILE_PATH: profiles/pingfederate
-
-    services:
-      admin:
-        servicePort: 9999
-        containerPort: 9999
-        ingressPort: 443
-        dataService: true
-      engine:
-        servicePort: 9031
-        containerPort: 9031
-        ingressPort: 443
-        dataService: true
+  
+  pingfederate-engine:
+    enabled: true
 
   pingdirectory:
     enabled: true

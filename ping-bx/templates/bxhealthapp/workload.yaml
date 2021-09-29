@@ -1,0 +1,5 @@
+{{- include "pinglib.workload" (list . "bxhealthapp" ) -}}
+
+
+{{- define "bxhealthapp.workload" -}}
+{{- end -}}

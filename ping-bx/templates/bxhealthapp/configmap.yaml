@@ -1,0 +1,7 @@
+{{- include "pinglib.configmap" (list . "bxhealthapp") -}}
+
+
+{{- define "bxhealthapp.configmap" -}}
+data:
+  BX_VAR: "NADA"
+{{- end -}}

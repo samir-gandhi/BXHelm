@@ -1,0 +1,29 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  labels:
+    app.kubernetes.io/name: {{ include "bx.name" . }}
+    helm.sh/chart: {{ include "bx.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+  annotations:
+    kubernetes.io/ingress.class: nginx-public-passthrough
+    nginx.ingress.kubernetes.io/backend-protocol: HTTPS
+    nginx.ingress.kubernetes.io/service-upstream: "true"
+    nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+  name: bxhealth-{{ .Release.Name }}-client-ingress
+spec:
+  rules:
+  - host: {{ .Values.bxhealthapp.ingress.host }}
+    http:
+      paths:
+      - path: /
+        #pathType: Prefix
+        backend:
+          serviceName: {{ .Release.Name }}-pingaccess-admin
+          servicePort: {{ ( index .Values "ping-devops" "pingaccess-admin" ).services.engine.servicePort }}
+      - path: /.well-known/acme-challenge
+        #pathType: Prefix
+        backend:
+          serviceName: {{ .Release.Name }}-pingaccess-admin
+          servicePort: {{ ( index .Values "ping-devops" "pingaccess-admin" ).services.http.servicePort }}

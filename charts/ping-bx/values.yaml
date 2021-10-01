@@ -1,5 +1,5 @@
 bxhealthapp:
-  enabled: true
+  enabled: false
   name: bxhealthapp
   image:
     repository: pingidentity
@@ -9,6 +9,8 @@ bxhealthapp:
     SERVER_PROFILE_URL: ""
     STARTUP_COMMAND: "tail"
     STARTUP_BACKGROUND_OPTS: "-f /dev/null"
+  ingress:
+    host: bxhealth.ping-devops.com
 
 ping-devops:
   global: 
@@ -56,33 +58,6 @@ ping-devops:
         containerPort: 8080
         ingressPort: 80
         dataService: true
-
-    ingress:
-      enabled: true
-      addReleaseNameToHost: append
-      defaultDomain: ping-devops.com
-      annotations:
-        kubernetes.io/ingress.class: nginx-public-passthrough
-        nginx.ingress.kubernetes.io/service-upstream: "true"
-        nginx.ingress.kubernetes.io/ssl-passthrough: "true"
-      hosts:
-        - host: pingaccess-admin._defaultDomain_
-          paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              serviceName: admin
-        ## CHANGEME
-        - host: pingaccess._defaultDomain_
-          paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              serviceName: https
-          - path: /.well-known/acme-challenge
-            pathType: Prefix
-            backend:
-              serviceName: http
 
   pingfederate-admin:
     enabled: true

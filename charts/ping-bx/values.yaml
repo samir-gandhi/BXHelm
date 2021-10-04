@@ -144,15 +144,19 @@ ping-devops:
   
   pingdataconsole:
     enabled: true
+    #TODO: GDO-1020
     envs:
-      SERVER_PROFILE_URL: ""
-      SERVER_PROFILE_PATH: ""
+      SERVER_PROFILE_URL: https://github.com/pingidentity/pingidentity-server-profiles.git
+      SERVER_PROFILE_PATH: baseline/pingdataconsole
   
   pingauthorize:
     enabled: true
     envs:
       SERVER_PROFILE_URL: https://github.com/Technical-Enablement-PingIdentity/BXHealth-ServerProfiles
       SERVER_PROFILE_PATH: profiles/pingauthorize
+      ROOT_USER_PASSWORD_FILE: /opt/staging/pwd
+      ADMIN_USER_PASSWORD_FILE: /opt/staging/pwd
+      ENCRYPTION_PASSWORD_FILE: /opt/staging/pwd
 
   pingauthorizepap:
     enabled: true

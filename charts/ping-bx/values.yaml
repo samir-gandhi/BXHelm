@@ -102,7 +102,7 @@ ping-devops:
           memory: 1Gi
         limits:
           cpu: 2
-          memory: 2Gis
+          memory: 2Gi
     envs:
       SERVER_PROFILE_PATH: profiles/pingfederate
 

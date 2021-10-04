@@ -27,7 +27,6 @@ ping-devops:
 
   pingaccess-admin:
     enabled: true
-    name: pingaccess-admin
     workload:
       type: Deployment
       deployment:
@@ -39,7 +38,7 @@ ping-devops:
           cpu: 0
           memory: 1Gi
         limits:
-          cpu: 1.5
+          cpu: 1500m
           memory: 1Gi
     envs:
       SERVER_PROFILE_PATH: profiles/pingaccess
@@ -52,7 +51,6 @@ ping-devops:
 
   pingaccess-engine:
     enabled: true
-    name: pingaccess-engine
     workload:
       type: Deployment
       deployment:
@@ -65,7 +63,7 @@ ping-devops:
           cpu: 0
           memory: 1Gi
         limits:
-          cpu: 1.5
+          cpu: 1500m
           memory: 1Gi
     envs:
       SERVER_PROFILE_PATH: profiles/pingaccess

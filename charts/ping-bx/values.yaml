@@ -30,6 +30,9 @@ ping-devops:
     name: pingaccess-admin
     workload:
       type: Deployment
+      deployment:
+        strategy:
+          type: Recreate
     container:
       resources:
         requests:
@@ -39,25 +42,33 @@ ping-devops:
           cpu: 1.5
           memory: 1Gi
     envs:
-      OPERATIONAL_MODE: STANDALONE
       SERVER_PROFILE_PATH: profiles/pingaccess
-
     services:
-      admin:
-        servicePort: 9000
-        containerPort: 9000
-        ingressPort: 443
-        dataService: true
-      engine:
-        servicePort: 3000
-        containerPort: 3000
-        ingressPort: 443
-        dataService: true
       http:
         servicePort: 8080
         containerPort: 8080
         ingressPort: 80
         dataService: true
+
+  pingaccess-engine:
+    enabled: true
+    name: pingaccess-engine
+    workload:
+      type: Deployment
+      deployment:
+        strategy:
+          type: Recreate
+    container:
+      replicaCount: 1
+      resources:
+        requests:
+          cpu: 0
+          memory: 1Gi
+        limits:
+          cpu: 1.5
+          memory: 1Gi
+    envs:
+      SERVER_PROFILE_PATH: profiles/pingaccess
 
   pingfederate-admin:
     enabled: true
@@ -72,13 +83,22 @@ ping-devops:
           memory: 1Gi
         limits:
           cpu: 2
-          memory: 4Gi
+          memory: 2Gi
     envs:
-      OPERATIONAL_MODE: STANDALONE
       SERVER_PROFILE_PATH: profiles/pingfederate
   
   pingfederate-engine:
     enabled: true
+    container:
+      resources:
+        requests:
+          cpu: 0
+          memory: 1Gi
+        limits:
+          cpu: 2
+          memory: 2Gis
+    envs:
+      SERVER_PROFILE_PATH: profiles/pingfederate
 
   pingdirectory:
     enabled: true

@@ -11,6 +11,14 @@ bxhealthapp:
     STARTUP_BACKGROUND_OPTS: "-f /dev/null"
   ingress:
     host: bxhealth.ping-devops.com
+  container:
+    resources:
+      requests:
+        cpu: 0
+        memory: 1Gi
+      limits:
+        cpu: 1500m
+        memory: 1Gi
 
 ping-devops:
   global: 

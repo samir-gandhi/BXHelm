@@ -3,16 +3,16 @@ entries:
   ping-bx:
   - apiVersion: v2
     appVersion: 0.7.6
-    created: "2021-10-04T10:07:29.875944-06:00"
+    created: "2021-10-04T10:25:42.568942-06:00"
     dependencies:
     - name: ping-devops
       repository: https://helm.pingidentity.com
       version: 0.7.6
     description: A Helm chart for Kubernetes
-    digest: 311f8071e0ea50d200cc9cc3afe235ac5aabd9bb48475940f9b47b0e4c4d0368
+    digest: 3341cd3634687fa8a5f62ead92cf2f73c81b0c9b7358b682286f740332ad3275
     name: ping-bx
     type: application
     urls:
     - ping-bx-0.1.0.tgz
     version: 0.1.0
-generated: "2021-10-04T10:07:29.868924-06:00"
+generated: "2021-10-04T10:25:42.561969-06:00"

@@ -33,6 +33,8 @@ ping-devops:
 
   pingaccess-admin:
     enabled: true
+    privateCert:
+      generate: true
     workload:
       type: Deployment
       deployment:

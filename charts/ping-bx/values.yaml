@@ -21,6 +21,19 @@ bxhealthapp:
       limits:
         cpu: 1500m
         memory: 1Gi
+    probes:
+      livenessProbe:
+        exec:
+          command:
+            - echo
+      readinessProbe:
+        exec:
+          command:
+            - echo
+      startupProbe:
+        exec:
+          command:
+            - echo
 
 
 ping-devops:

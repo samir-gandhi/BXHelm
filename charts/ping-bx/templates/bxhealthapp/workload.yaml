@@ -1,5 +1,12 @@
 {{- include "pinglib.workload" (list . "bxhealthapp" ) -}}
-
-
 {{- define "bxhealthapp.workload" -}}
+{{- $top := index . 0 -}}
+{{- $v := index . 1 -}}
+{{ if $v.image.pullSecret }}
+spec:
+  template:
+    spec:
+      imagePullSecrets:
+      - name: {{ $v.image.pullSecret }}
+{{ end }}
 {{- end -}}

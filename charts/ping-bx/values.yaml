@@ -2,15 +2,17 @@ bxhealthapp:
   enabled: false
   name: bxhealthapp
   image:
-    repository: pingidentity
-    name: pingtoolkit
-    tag: "2108"
+    repository: gcr.io/ping-gte
+    name: bxhealthapp-dev
+    tag: latest
+    pullSecret: ""
   envs:
     SERVER_PROFILE_URL: ""
     STARTUP_COMMAND: "tail"
     STARTUP_BACKGROUND_OPTS: "-f /dev/null"
   ingress:
     host: bxhealth.ping-devops.com
+    pingaccess:
   container:
     resources:
       requests:
@@ -19,6 +21,7 @@ bxhealthapp:
       limits:
         cpu: 1500m
         memory: 1Gi
+
 
 ping-devops:
   global: 
@@ -30,7 +33,6 @@ ping-devops:
       annotations:
         nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
         kubernetes.io/ingress.class: "nginx-public"
-
   pingaccess-admin:
     enabled: true
     privateCert:
@@ -48,10 +50,10 @@ ping-devops:
       resources:
         requests:
           cpu: 0
-          memory: 1Gi
+          memory: 1.5Gi
         limits:
           cpu: 1500m
-          memory: 1Gi
+          memory: 1.5Gi
     envs:
       SERVER_PROFILE_URL: https://github.com/Technical-Enablement-PingIdentity/BXHealth-ServerProfiles
       SERVER_PROFILE_PATH: profiles/pingaccess
@@ -74,10 +76,10 @@ ping-devops:
       resources:
         requests:
           cpu: 0
-          memory: 1Gi
+          memory: 1.5Gi
         limits:
           cpu: 1500m
-          memory: 1Gi
+          memory: 1.5Gi
     envs:
       SERVER_PROFILE_URL: https://github.com/Technical-Enablement-PingIdentity/BXHealth-ServerProfiles
       SERVER_PROFILE_PATH: profiles/pingaccess
@@ -175,155 +177,12 @@ ping-devops:
     envs:
       SERVER_PROFILE_URL: https://github.com/Technical-Enablement-PingIdentity/BXHealth-ServerProfiles
       SERVER_PROFILE_PATH: profiles/pingauthorizepap
-
-## copied from pingidentity/ping-devops 0.7.6
-global:
-  annotations: {}
-
-  envs: {}
-
-  addReleaseNameToResource: prepend
-
-  ingress:
-    enabled: false
-    addReleaseNameToHost: subdomain
-    defaultDomain: example.com
-    defaultTlsSecret:
-    annotations: {}
-
-  privateCert:
-    generate: false
-    additionalHosts: []
-    additionalIPs: []
-
-  vault:
-    enabled: false
-    hashicorp:
-      annotations:
-        agent-inject: true
-        agent-init-first: true
-        agent-pre-populate-only: true
-        log-level: info
-        preserve-secret-case: true
-        role: k8s-default
-        secret-volume-path: /run/secrets
-        serviceAccountName: vault-auth
-
-  image:
-    repository: pingidentity
-    name:
-    tag: "2108"
-    pullPolicy: IfNotPresent
-
-  externalImage:
-    pingtoolkit:
-      image: pingidentity/pingtoolkit:2108
-      imagePullPolicy: IfNotPresent
+    container:
+      replicaCount: 1
       resources:
-        limits:
-          cpu: 500m
-          memory: 128Mi
         requests:
-          cpu: 1m
-          memory: 64Mi
-      securityContext:
-        allowPrivilegeEscalation: false
-        capabilities:
-          drop:
-          - ALL
-        readOnlyRootFilesystem: true
-        runAsNonRoot: true
-        runAsUser: 9031
-        runAsGroup: 9999
-
-  services: {}
-
-
-  workload:
-    type: Deployment
-
-    annotations: {}
-
-    schedulerName: default-scheduler
-
-    deployment:
-      strategy:
-        type: RollingUpdate
-        rollingUpdate:
-          maxSurge: 1
-          maxUnavailable: 0
-
-    statefulSet:
-      partition: 0
-
-      persistentvolume:
-        enabled: true
-        volumes:
-          out-dir:
-            mountPath: /opt/out
-            persistentVolumeClaim:
-              accessModes:
-              - ReadWriteOnce
-              storageClassName:
-              resources:
-                requests:
-                  storage: 4Gi
-
-    securityContext:
-      fsGroup: 9999
-      runAsUser: 9031
-      runAsGroup: 9999
-
-  container:
-    replicaCount: 1
-
-    resources:
-      requests:
-        cpu: 0
-        memory: 0
-      limits:
-        cpu: 0
-        memory: 0
-    nodeSelector: {}
-    tolerations: []
-    affinity: {}
-    terminationGracePeriodSeconds: 30
-
-    envFrom: []
-
-    lifecycle: {}
-
-    probes:
-      livenessProbe:
-        exec:
-          command:
-            - /opt/liveness.sh
-        initialDelaySeconds: 30
-        periodSeconds: 30
-        timeoutSeconds: 5
-        successThreshold: 1
-        failureThreshold: 4
-      readinessProbe:
-        exec:
-          command:
-            - /opt/readiness.sh
-        initialDelaySeconds: 30
-        periodSeconds: 5
-        timeoutSeconds: 5
-        successThreshold: 1
-        failureThreshold: 4
-      startupProbe:
-        exec:
-          command:
-            - /opt/liveness.sh
-        periodSeconds: 10
-        timeoutSeconds: 5
-        failureThreshold: 90
-
-  license:
-    secret:
-      devOps: devops-secret
-
-  includeSidecars: []
-  includeInitContainers: []
-  includeVolumes: []
+          cpu: 50m
+          memory: 1.5Gi
+        limits:
+          cpu: 2
+          memory: 1.5Gi

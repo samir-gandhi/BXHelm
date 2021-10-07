@@ -44,7 +44,7 @@ ping-devops:
   global: 
     ingress:
       enabled: false
-      addReleaseNameToHost: none
+      addReleaseNameToHost: append
       defaultDomain: ping-devops.com
       defaultTlsSecret:
       annotations:

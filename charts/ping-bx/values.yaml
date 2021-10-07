@@ -13,6 +13,10 @@ bxhealthapp:
   ingress:
     host: bxhealth.ping-devops.com
     pingaccess:
+  workload:
+    deployment:
+      strategy:
+        type: Recreate
   container:
     resources:
       requests:
@@ -40,7 +44,7 @@ ping-devops:
   global: 
     ingress:
       enabled: false
-      addReleaseNameToHost: append
+      addReleaseNameToHost: none
       defaultDomain: ping-devops.com
       defaultTlsSecret:
       annotations:

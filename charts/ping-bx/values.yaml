@@ -5,6 +5,7 @@ bxhealthapp:
     repository: gcr.io/ping-gte
     name: bxhealthapp-dev
     tag: latest
+    pullPolicy: Always
     pullSecret: "gcr-pull-secret"
   privateCert:
     generate: true
@@ -42,6 +43,12 @@ bxhealthapp:
         exec:
           command:
             - echo
+  services:
+    https:
+      containerPort: 5000
+      servicePort: 5000
+      # ingressPort: 443
+      dataService: true
 
 global: {}
 

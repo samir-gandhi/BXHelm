@@ -1,18 +1,22 @@
 bxhealthapp:
-  enabled: false
+  enabled: true
   name: bxhealthapp
   image:
     repository: gcr.io/ping-gte
     name: bxhealthapp-dev
     tag: latest
-    pullSecret: ""
+    pullSecret: "gcr-pull-secret"
+  privateCert:
+    generate: true
+  volumeMounts:
+    - mountPath: /run/secrets/private-cert
+      name: private-cert
   envs:
     SERVER_PROFILE_URL: ""
     STARTUP_COMMAND: "tail"
     STARTUP_BACKGROUND_OPTS: "-f /dev/null"
   ingress:
     host: bxhealth.ping-devops.com
-    pingaccess:
   workload:
     deployment:
       strategy:
@@ -38,6 +42,8 @@ bxhealthapp:
         exec:
           command:
             - echo
+
+global: {}
 
 
 ping-devops:

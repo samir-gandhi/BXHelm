@@ -67,16 +67,26 @@ ping-devops:
     enabled: true
     privateCert:
       generate: true
-    workload:
-      type: Deployment
-      deployment:
-        strategy:
-          type: Recreate
     container:
       waitFor:
         pingfederate-engine:
           service: https
           timeoutSeconds: 600
+      resources:
+        requests:
+          cpu: 0
+          memory: 1.5Gi
+        limits:
+          cpu: 1500m
+          memory: 1.5Gi
+    envs:
+      SERVER_PROFILE_URL: https://github.com/Technical-Enablement-PingIdentity/BXHealth-ServerProfiles
+      SERVER_PROFILE_PATH: profiles/pingaccess
+
+  pingaccess-engine:
+    enabled: true
+    container:
+      replicaCount: 1
       resources:
         requests:
           cpu: 0
@@ -93,26 +103,6 @@ ping-devops:
         containerPort: 8080
         ingressPort: 80
         dataService: true
-
-  pingaccess-engine:
-    enabled: true
-    workload:
-      type: Deployment
-      deployment:
-        strategy:
-          type: Recreate
-    container:
-      replicaCount: 1
-      resources:
-        requests:
-          cpu: 0
-          memory: 1.5Gi
-        limits:
-          cpu: 1500m
-          memory: 1.5Gi
-    envs:
-      SERVER_PROFILE_URL: https://github.com/Technical-Enablement-PingIdentity/BXHealth-ServerProfiles
-      SERVER_PROFILE_PATH: profiles/pingaccess
 
   pingfederate-admin:
     enabled: true
@@ -216,3 +206,37 @@ ping-devops:
         limits:
           cpu: 2
           memory: 1.5Gi
+
+# testFramework:
+#   enabled: true
+#   testConfigMaps:
+#     files:
+
+#   testSteps:
+#     - name: 01-wait-for
+#       waitFor:
+#         pingdirectory:
+#           service: https
+
+#     - name: 02-get-dse
+#       image: ${DEPS_REGISTRY}pingidentity/ldap-sdk-tools
+#       securityContext:
+#         runAsUser: 9031
+#       command: ["/bin/sh"]
+#       args:
+#         - -c
+#         - >-
+#             echo "hostname: $(PD_ENGINE_PRIVATE_HOSTNAME)" &&
+#             echo $(PD_ENGINE_PRIVATE_PORT_LDAPS) &&
+#             /opt/tools/ldapsearch --baseDN "" --hostname $(PD_ENGINE_PRIVATE_HOSTNAME) --port $(PD_ENGINE_PRIVATE_PORT_LDAPS) --useSSL --trustAll --scope base "(&)"
+
+#     - name: 02-postman-pd-helm-test
+#       image: ${DEPS_REGISTRY}arnaudlacour/newman
+#       command:
+#         - newman
+#         - run
+#         - /var/run/pd-helm-test.postman-collection.json
+#         - --environment
+#         - /var/run/generated.postman-environment.json
+#         - --insecure
+#         - --ignore-redirects

@@ -25,5 +25,5 @@ spec:
       - path: /.well-known/acme-challenge
         #pathType: Prefix
         backend:
-          serviceName: {{ .Release.Name }}-pingaccess-admin
-          servicePort: {{ ( index .Values "ping-devops" "pingaccess-admin" ).services.http.servicePort }}
+          serviceName: {{ .Release.Name }}-pingaccess-engine
+          servicePort: {{ ( index .Values "ping-devops" "pingaccess-engine" ).services.http.servicePort }}

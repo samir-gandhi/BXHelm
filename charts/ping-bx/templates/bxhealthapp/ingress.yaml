@@ -9,6 +9,7 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: nginx-public
     nginx.ingress.kubernetes.io/backend-protocol: HTTPS
+    nginx.ingress.kubernetes.io/app-root: /app/
     # nginx.ingress.kubernetes.io/service-upstream: "true"
     # nginx.ingress.kubernetes.io/ssl-passthrough: "true"
   name: bxhealth-{{ .Release.Name }}-client-ingress

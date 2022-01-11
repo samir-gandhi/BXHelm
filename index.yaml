@@ -3,7 +3,7 @@ entries:
   ping-bx:
   - apiVersion: v2
     appVersion: 0.7.6
-    created: "2022-01-10T11:50:50.226204-07:00"
+    created: "2022-01-11T09:04:39.059028-07:00"
     dependencies:
     - import-values:
       - child: global
@@ -12,7 +12,7 @@ entries:
       repository: https://helm.pingidentity.com
       version: 0.7.6
     description: A Helm chart for Kubernetes
-    digest: a67c599f83a3aae0d1731d07d4ab99f38fda34b1e28a6c3a12bd860f82eece23
+    digest: 77a727cff42c626a1d4209bb7eb2125be747cd9d044324d3791ea12cbc6a6f3e
     name: ping-bx
     type: application
     urls:
@@ -20,7 +20,7 @@ entries:
     version: 0.1.1
   - apiVersion: v2
     appVersion: 0.7.6
-    created: "2022-01-10T11:50:50.220907-07:00"
+    created: "2022-01-11T09:04:39.053535-07:00"
     dependencies:
     - import-values:
       - child: global
@@ -35,4 +35,4 @@ entries:
     urls:
     - ping-bx-0.1.0.tgz
     version: 0.1.0
-generated: "2022-01-10T11:50:50.214686-07:00"
+generated: "2022-01-11T09:04:39.04722-07:00"

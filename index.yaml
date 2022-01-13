@@ -3,7 +3,7 @@ entries:
   ping-bx:
   - apiVersion: v2
     appVersion: 0.7.6
-    created: "2022-01-11T09:39:17.685453-07:00"
+    created: "2022-01-13T15:16:15.147826-07:00"
     dependencies:
     - import-values:
       - child: global
@@ -20,7 +20,7 @@ entries:
     version: 0.1.1
   - apiVersion: v2
     appVersion: 0.7.6
-    created: "2022-01-11T09:39:17.680332-07:00"
+    created: "2022-01-13T15:16:15.142426-07:00"
     dependencies:
     - import-values:
       - child: global
@@ -35,4 +35,4 @@ entries:
     urls:
     - ping-bx-0.1.0.tgz
     version: 0.1.0
-generated: "2022-01-11T09:39:17.673718-07:00"
+generated: "2022-01-13T15:16:15.136854-07:00"

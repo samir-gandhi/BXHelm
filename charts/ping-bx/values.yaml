@@ -18,6 +18,7 @@ bxhealthapp:
     STARTUP_BACKGROUND_OPTS: "-f /dev/null"
   ingress:
     host: bxhealth.ping-devops.com
+    tlsSecret: bxhealth-tls
   workload:
     deployment:
       strategy:

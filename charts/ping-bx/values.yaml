@@ -13,7 +13,6 @@ bxhealthapp:
     - mountPath: /run/secrets/private-cert
       name: private-cert
   envs:
-    SERVER_PROFILE_URL: ""
     STARTUP_COMMAND: "tail"
     STARTUP_BACKGROUND_OPTS: "-f /dev/null"
   ingress:
@@ -66,7 +65,6 @@ bxretailapp:
     - mountPath: /run/secrets/private-cert
       name: private-cert
   envs:
-    SERVER_PROFILE_URL: ""
     STARTUP_COMMAND: "tail"
     STARTUP_BACKGROUND_OPTS: "-f /dev/null"
   ingress:
@@ -119,7 +117,6 @@ bxfinanceapp:
     - mountPath: /run/secrets/private-cert
       name: private-cert
   envs:
-    SERVER_PROFILE_URL: ""
     STARTUP_COMMAND: "tail"
     STARTUP_BACKGROUND_OPTS: "-f /dev/null"
   ingress:
@@ -186,9 +183,6 @@ ping-devops:
         limits:
           cpu: 1500m
           memory: 1.5Gi
-    envs:
-      SERVER_PROFILE_URL: https://github.com/Technical-Enablement-PingIdentity/BXHealth-ServerProfiles
-      SERVER_PROFILE_PATH: profiles/pingaccess
 
   pingaccess-engine:
     enabled: true
@@ -201,9 +195,6 @@ ping-devops:
         limits:
           cpu: 1500m
           memory: 1.5Gi
-    envs:
-      SERVER_PROFILE_URL: https://github.com/Technical-Enablement-PingIdentity/BXHealth-ServerProfiles
-      SERVER_PROFILE_PATH: profiles/pingaccess
     services:
       http:
         servicePort: 8080
@@ -225,9 +216,6 @@ ping-devops:
         limits:
           cpu: 2
           memory: 2Gi
-    envs:
-      SERVER_PROFILE_URL: https://github.com/Technical-Enablement-PingIdentity/BXHealth-ServerProfiles
-      SERVER_PROFILE_PATH: profiles/pingfederate
   
   pingfederate-engine:
     enabled: true
@@ -239,9 +227,6 @@ ping-devops:
         limits:
           cpu: 2
           memory: 2Gi
-    envs:
-      SERVER_PROFILE_URL: https://github.com/Technical-Enablement-PingIdentity/BXHealth-ServerProfiles
-      SERVER_PROFILE_PATH: profiles/pingfederate
 
   pingdirectory:
     enabled: true
@@ -255,8 +240,6 @@ ping-devops:
           cpu: 2
           memory: 3Gi
     envs:
-      SERVER_PROFILE_URL: https://github.com/Technical-Enablement-PingIdentity/BXHealth-ServerProfiles
-      SERVER_PROFILE_PATH: profiles/pingdirectory
       MAX_HEAP_SIZE: 2458m
       ROOT_USER_PASSWORD_FILE: /opt/staging/pwd
       ADMIN_USER_PASSWORD_FILE: /opt/staging/pwd
@@ -279,11 +262,6 @@ ping-devops:
   
   pingdataconsole:
     enabled: true
-    #TODO: GDO-1020
-    envs:
-      SERVER_PROFILE_URL: https://github.com/pingidentity/pingidentity-server-profiles.git
-      SERVER_PROFILE_PATH: baseline/pingdataconsole
-      SERVER_PROFILE_BRANCH: master
   
   pingauthorize:
     enabled: true
@@ -293,17 +271,12 @@ ping-devops:
           service: ldaps
           timeoutSeconds: 300
     envs:
-      SERVER_PROFILE_URL: https://github.com/Technical-Enablement-PingIdentity/BXHealth-ServerProfiles
-      SERVER_PROFILE_PATH: profiles/pingauthorize
       ROOT_USER_PASSWORD_FILE: /opt/staging/pwd
       ADMIN_USER_PASSWORD_FILE: /opt/staging/pwd
       ENCRYPTION_PASSWORD_FILE: /opt/staging/pwd
 
   pingauthorizepap:
     enabled: true
-    envs:
-      SERVER_PROFILE_URL: https://github.com/Technical-Enablement-PingIdentity/BXHealth-ServerProfiles
-      SERVER_PROFILE_PATH: profiles/pingauthorizepap
     container:
       replicaCount: 1
       resources:

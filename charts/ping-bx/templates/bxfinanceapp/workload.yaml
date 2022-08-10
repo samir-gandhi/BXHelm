@@ -1,0 +1,16 @@
+{{- include "pinglib.workload" (list . "bxfinanceapp" ) -}}
+{{- define "bxfinanceapp.workload" -}}
+{{- $top := index . 0 -}}
+{{- $v := index . 1 -}}
+{{ if $v.image.pullSecret }}
+spec:
+  template:
+    spec:
+      imagePullSecrets:
+      - name: {{ $v.image.pullSecret }}
+      securityContext:
+        fsGroup: 0
+        runAsUser: 0
+        runAsGroup: 0
+{{ end }}
+{{- end -}}

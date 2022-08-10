@@ -1,5 +1,5 @@
 bxhealthapp:
-  enabled: true
+  enabled: false
   name: bxhealthapp
   image:
     repository: gcr.io/ping-gte
@@ -19,6 +19,112 @@ bxhealthapp:
   ingress:
     host: bxhealth.ping-devops.com
     tlsSecret: bxhealth-tls
+  workload:
+    deployment:
+      strategy:
+        type: Recreate
+  container:
+    resources:
+      requests:
+        cpu: 0
+        memory: 1Gi
+      limits:
+        cpu: 1500m
+        memory: 1Gi
+    probes:
+      livenessProbe:
+        exec:
+          command:
+            - echo
+      readinessProbe:
+        exec:
+          command:
+            - echo
+      startupProbe:
+        exec:
+          command:
+            - echo
+  services:
+    https:
+      containerPort: 5000
+      servicePort: 5000
+      # ingressPort: 443
+      dataService: true
+
+bxretailapp:
+  enabled: false
+  name: bxretailapp
+  image:
+    repository: gcr.io/ping-gte
+    name: bxretailapp-dev
+    tag: latest
+    pullPolicy: Always
+    pullSecret: "gcr-pull-secret"
+  privateCert:
+    generate: true
+  volumeMounts:
+    - mountPath: /run/secrets/private-cert
+      name: private-cert
+  envs:
+    SERVER_PROFILE_URL: ""
+    STARTUP_COMMAND: "tail"
+    STARTUP_BACKGROUND_OPTS: "-f /dev/null"
+  ingress:
+    host: bxretail.ping-devops.com
+    tlsSecret: bxretail-tls
+  workload:
+    deployment:
+      strategy:
+        type: Recreate
+  container:
+    resources:
+      requests:
+        cpu: 0
+        memory: 1Gi
+      limits:
+        cpu: 1500m
+        memory: 1Gi
+    probes:
+      livenessProbe:
+        exec:
+          command:
+            - echo
+      readinessProbe:
+        exec:
+          command:
+            - echo
+      startupProbe:
+        exec:
+          command:
+            - echo
+  services:
+    https:
+      containerPort: 5000
+      servicePort: 5000
+      # ingressPort: 443
+      dataService: true
+
+bxfinanceapp:
+  enabled: false
+  name: bxfinanceapp
+  image:
+    repository: gcr.io/ping-gte
+    name: bxfinanceapp-dev
+    tag: latest
+    pullPolicy: Always
+    pullSecret: "gcr-pull-secret"
+  privateCert:
+    generate: true
+  volumeMounts:
+    - mountPath: /run/secrets/private-cert
+      name: private-cert
+  envs:
+    SERVER_PROFILE_URL: ""
+    STARTUP_COMMAND: "tail"
+    STARTUP_BACKGROUND_OPTS: "-f /dev/null"
+  ingress:
+    host: bxfinance.ping-devops.com
+    tlsSecret: bxfinance-tls
   workload:
     deployment:
       strategy:

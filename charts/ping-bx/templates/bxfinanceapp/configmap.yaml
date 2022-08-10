@@ -1,0 +1,7 @@
+{{- include "pinglib.configmap" (list . "bxfinanceapp") -}}
+
+
+{{- define "bxfinanceapp.configmap" -}}
+data:
+  BX_VAR: "NADA"
+{{- end -}}

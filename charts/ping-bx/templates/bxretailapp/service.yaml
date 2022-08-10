@@ -1,0 +1,6 @@
+{{- include "pinglib.service" (list . "bxretailapp") -}}
+
+
+
+{{- define "bxretailapp.service" -}}
+{{- end -}}

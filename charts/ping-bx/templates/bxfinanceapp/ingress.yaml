@@ -1,4 +1,4 @@
-{{- if (merge (index .Values "bxhealthapp") .Values.global).ingress.enabled }}
+{{- if (merge (index .Values "bxfinanceapp") .Values.global).ingress.enabled }}
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
@@ -11,10 +11,10 @@ metadata:
     kubernetes.io/ingress.class: nginx-public
     nginx.ingress.kubernetes.io/backend-protocol: HTTPS
     nginx.ingress.kubernetes.io/app-root: /app/
-  name: bxhealth-{{ .Release.Name }}-client-ingress
+  name: bxfinance-{{ .Release.Name }}-client-ingress
 spec:
   rules:
-  - host: {{ .Values.bxhealthapp.ingress.host }}
+  - host: {{ .Values.bxfinanceapp.ingress.host }}
     http:
       paths:
       - path: /
@@ -24,6 +24,6 @@ spec:
           servicePort: {{ ( index .Values "ping-devops" "pingaccess-engine" ).services.https.servicePort }}
   tls:
   - hosts:
-      - {{ .Values.bxhealthapp.ingress.host }}
-    secretName: {{ .Values.bxhealthapp.ingress.tlsSecret }}
+      - {{ .Values.bxfinanceapp.ingress.host }}
+    secretName: {{ .Values.bxfinanceapp.ingress.tlsSecret }}
 {{- end -}}

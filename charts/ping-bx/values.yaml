@@ -168,7 +168,7 @@ ping-devops:
         nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
         kubernetes.io/ingress.class: "nginx-public"
   pingaccess-admin:
-    enabled: true
+    enabled: false
     privateCert:
       generate: true
     container:
@@ -185,7 +185,7 @@ ping-devops:
           memory: 1.5Gi
 
   pingaccess-engine:
-    enabled: true
+    enabled: false
     container:
       replicaCount: 1
       resources:
@@ -203,7 +203,7 @@ ping-devops:
         dataService: true
 
   pingfederate-admin:
-    enabled: true
+    enabled: false
     container:
       waitFor:
         pingdirectory:
@@ -218,7 +218,7 @@ ping-devops:
           memory: 2Gi
   
   pingfederate-engine:
-    enabled: true
+    enabled: false
     container:
       resources:
         requests:
@@ -229,7 +229,7 @@ ping-devops:
           memory: 2Gi
 
   pingdirectory:
-    enabled: true
+    enabled: false
     container:
       replicaCount: 1
       resources:
@@ -239,11 +239,6 @@ ping-devops:
         limits:
           cpu: 2
           memory: 3Gi
-    envs:
-      MAX_HEAP_SIZE: 2458m
-      ROOT_USER_PASSWORD_FILE: /opt/staging/pwd
-      ADMIN_USER_PASSWORD_FILE: /opt/staging/pwd
-      ENCRYPTION_PASSWORD_FILE: /opt/staging/pwd
     services:
       ldap:
         servicePort: 389
@@ -261,22 +256,18 @@ ping-devops:
         dataService: true
   
   pingdataconsole:
-    enabled: true
+    enabled: false
   
   pingauthorize:
-    enabled: true
+    enabled: false
     container:
       waitFor:
         pingdirectory:
           service: ldaps
           timeoutSeconds: 300
-    envs:
-      ROOT_USER_PASSWORD_FILE: /opt/staging/pwd
-      ADMIN_USER_PASSWORD_FILE: /opt/staging/pwd
-      ENCRYPTION_PASSWORD_FILE: /opt/staging/pwd
 
   pingauthorizepap:
-    enabled: true
+    enabled: false
     container:
       replicaCount: 1
       resources:

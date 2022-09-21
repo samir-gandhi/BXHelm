@@ -161,7 +161,7 @@ ping-devops:
   global: 
     ingress:
       enabled: false
-      addReleaseNameToHost: append
+      addReleaseNameToHost: prepend
       defaultDomain: ping-devops.com
       defaultTlsSecret:
       annotations:

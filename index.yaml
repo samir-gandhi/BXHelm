@@ -3,7 +3,24 @@ entries:
   ping-bx:
   - apiVersion: v2
     appVersion: 0.7.6
-    created: "2022-09-21T16:40:37.584499-06:00"
+    created: "2022-12-07T13:09:49.261963-07:00"
+    dependencies:
+    - import-values:
+      - child: global
+        parent: global
+      name: ping-devops
+      repository: https://helm.pingidentity.com
+      version: 0.7.6
+    description: A Helm chart for Kubernetes
+    digest: 6eccd680df85d12d82b02ed14f3be04c874e367f7aa4fcce46cc8de8dc57f7e7
+    name: ping-bx
+    type: application
+    urls:
+    - https://samir-gandhi.github.io/BXHelm/ping-bx-0.1.4.tgz
+    version: 0.1.4
+  - apiVersion: v2
+    appVersion: 0.7.6
+    created: "2022-12-07T13:09:49.256661-07:00"
     dependencies:
     - import-values:
       - child: global
@@ -20,7 +37,7 @@ entries:
     version: 0.1.3
   - apiVersion: v2
     appVersion: 0.7.6
-    created: "2022-09-21T16:40:37.577957-06:00"
+    created: "2022-12-07T13:09:49.251259-07:00"
     dependencies:
     - import-values:
       - child: global
@@ -37,7 +54,7 @@ entries:
     version: 0.1.2
   - apiVersion: v2
     appVersion: 0.7.6
-    created: "2022-09-21T16:40:37.570999-06:00"
+    created: "2022-12-07T13:09:49.244866-07:00"
     dependencies:
     - import-values:
       - child: global
@@ -54,7 +71,7 @@ entries:
     version: 0.1.1
   - apiVersion: v2
     appVersion: 0.7.6
-    created: "2022-09-21T16:40:37.565162-06:00"
+    created: "2022-12-07T13:09:49.239234-07:00"
     dependencies:
     - import-values:
       - child: global
@@ -69,4 +86,4 @@ entries:
     urls:
     - https://samir-gandhi.github.io/BXHelm/ping-bx-0.1.0.tgz
     version: 0.1.0
-generated: "2022-09-21T16:40:37.558267-06:00"
+generated: "2022-12-07T13:09:49.232711-07:00"

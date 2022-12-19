@@ -122,6 +122,7 @@ bxfinanceapp:
   ingress:
     host: bxfinance.ping-devops.com
     tlsSecret: bxfinance-tls
+    annotations: {}
   workload:
     deployment:
       strategy:

@@ -1,4 +1,7 @@
 {{- if (merge (index .Values "bxhealthapp")).ingress.enabled }}
+
+{{- $v := index .Values "bxhealthapp" -}}
+
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
@@ -7,10 +10,7 @@ metadata:
     helm.sh/chart: {{ include "bx.chart" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
-  annotations:
-    kubernetes.io/ingress.class: nginx-public
-    nginx.ingress.kubernetes.io/backend-protocol: HTTPS
-    nginx.ingress.kubernetes.io/app-root: /app/
+  annotations: {{ toYaml $v.ingress.annotations  | nindent 4 }}
   name: bxhealth-{{ .Release.Name }}-client-ingress
 spec:
   rules:

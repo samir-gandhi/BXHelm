@@ -18,6 +18,7 @@ bxhealthapp:
   ingress:
     host: bxhealth.ping-devops.com
     tlsSecret: bxhealth-tls
+    annotations: {}
   workload:
     deployment:
       strategy:
@@ -70,6 +71,7 @@ bxretailapp:
   ingress:
     host: bxretail.ping-devops.com
     tlsSecret: bxretail-tls
+    annotations: {}
   workload:
     deployment:
       strategy:

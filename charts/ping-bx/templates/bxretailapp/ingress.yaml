@@ -1,6 +1,6 @@
 {{- if (merge (index .Values "bxretailapp") ).ingress.enabled }}
 
-{{- $v := index .Values "bxfinanceapp" -}}
+{{- $v := index .Values "bxretailapp" -}}
 
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress

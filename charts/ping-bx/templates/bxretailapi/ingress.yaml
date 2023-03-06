@@ -1,0 +1,29 @@
+{{- if (merge (index .Values "bxretailapi") ).ingress.enabled }}
+
+{{- $v := index .Values "bxretailapi" -}}
+
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  labels:
+    app.kubernetes.io/name: {{ include "bx.name" . }}
+    helm.sh/chart: {{ include "bx.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+  annotations: {{ toYaml $v.ingress.annotations  | nindent 4 }}
+  name: bxretail-{{ .Release.Name }}-api-ingress
+spec:
+  rules:
+  - host: {{ .Values.bxretailapi.ingress.host }}
+    http:
+      paths:
+      - path: /
+        #pathType: Prefix
+        backend:
+          serviceName: {{ .Release.Name }}-bxretailapi
+          servicePort: {{ .Values.bxretailapi.services.https.servicePort }}
+  tls:
+  - hosts:
+      - {{ .Values.bxretailapi.ingress.host }}
+    secretName: {{ .Values.bxretailapi.ingress.tlsSecret }}
+{{- end -}}
